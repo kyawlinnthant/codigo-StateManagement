@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -22,6 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Alcohol
+import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Allergy
+import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Diet
+import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Health
 import com.kyawlinnthant.codigo.statemanagementcodigo2.screen.AllergyScreen
 import com.kyawlinnthant.codigo.statemanagementcodigo2.screen.DietScreen
 import com.kyawlinnthant.codigo.statemanagementcodigo2.screen.HealthScreen
@@ -32,7 +36,19 @@ import com.kyawlinnthant.codigo.statemanagementcodigo2.screen.VitaminScreen
 @Composable
 fun OnBoardingScreen(
     modifier: Modifier = Modifier,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    enabledExposure: Boolean,
+    enabledSmoke: Boolean,
+    alcohol: Alcohol,
+    onAction: (OnBoardingAction) -> Unit,
+    selectedHealths: List<Health>,
+    inputHealths: List<Health>,
+    selectedDiets: List<Diet>,
+    inputDiets: List<Diet>,
+    selectedAllergies: List<Allergy>,
+    inputAllergies: List<Allergy>,
+    pagerState: PagerState,
+    pages: List<OnBoardingScreens>
 ) {
 
     val backgroundColor = Brush.verticalGradient(
@@ -47,19 +63,6 @@ fun OnBoardingScreen(
             MaterialTheme.colorScheme.secondary,
             MaterialTheme.colorScheme.secondary
         )
-    )
-
-    val pages = listOf(
-        OnBoardingScreens.Start,
-        OnBoardingScreens.Health,
-        OnBoardingScreens.Diet,
-        OnBoardingScreens.Allergy,
-        OnBoardingScreens.Vitamin
-
-    )
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { pages.size }
     )
 
     val indicatorFloat by remember {
@@ -84,28 +87,37 @@ fun OnBoardingScreen(
             modifier = modifier
                 .fillMaxSize()
                 .weight(1f),
-//            userScrollEnabled = false
+            userScrollEnabled = false
         ) { page ->
             when (pages[page]) {
-                OnBoardingScreens.Allergy -> AllergyScreen {
+                OnBoardingScreens.Allergy -> AllergyScreen(
+                    onAction = onAction,
+                    inputAllergies = inputAllergies,
+                    selectedAllergies = selectedAllergies
+                )
 
-                }
+                OnBoardingScreens.Diet -> DietScreen(
+                    onAction = onAction,
+                    inputDiets = inputDiets,
+                    selectedDiets = selectedDiets
+                )
 
-                OnBoardingScreens.Diet -> DietScreen {
+                OnBoardingScreens.Health -> HealthScreen(
+                    onAction = onAction,
+                    inputHealths = inputHealths,
+                    selectedHealths = selectedHealths
+                )
 
-                }
+                OnBoardingScreens.Start -> StartScreen(
+                    onAction = onAction
+                )
 
-                OnBoardingScreens.Health -> HealthScreen {
-
-                }
-
-                OnBoardingScreens.Start -> StartScreen {
-
-                }
-
-                OnBoardingScreens.Vitamin -> VitaminScreen {
-
-                }
+                OnBoardingScreens.Vitamin -> VitaminScreen(
+                    onAction = onAction,
+                    exposureEnabled = enabledExposure,
+                    smokeEnabled = enabledSmoke,
+                    alcohol = alcohol
+                )
             }
 
         }

@@ -22,11 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kyawlinnthant.codigo.statemanagementcodigo2.R
+import com.kyawlinnthant.codigo.statemanagementcodigo2.onboarding.OnBoardingAction
+import com.kyawlinnthant.codigo.statemanagementcodigo2.onboarding.OnBoardingScreens
 
 @Composable
 fun StartScreen(
     modifier: Modifier = Modifier,
-    onGetStarted: () -> Unit
+    onAction: (OnBoardingAction) -> Unit
 ) {
 
     Column(
@@ -37,7 +39,10 @@ fun StartScreen(
         verticalArrangement = Arrangement.Bottom,
     ) {
         Column(
-            modifier = modifier.fillMaxSize().weight(1f).systemBarsPadding()
+            modifier = modifier
+                .fillMaxSize()
+                .weight(1f)
+                .systemBarsPadding()
         ) {
             Text(
                 text = stringResource(id = R.string.start_header),
@@ -68,12 +73,14 @@ fun StartScreen(
         }
 
         Button(
-            onClick = onGetStarted,
+            onClick = {
+                onAction(OnBoardingAction.Next(OnBoardingScreens.Start))
+            },
             modifier = modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(4.dp)
         ) {
-            Text(text = "Get Started")
+            Text(text = stringResource(id = R.string.get_started))
         }
     }
 }

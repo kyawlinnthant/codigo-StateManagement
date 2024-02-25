@@ -11,7 +11,10 @@ sealed interface OnBoardingAction {
     data class AddDiet(val diet: Diet) : OnBoardingAction
     data class RemoveDiet(val diet: Diet) : OnBoardingAction
     data class AddAllergy(val allergy: Allergy) : OnBoardingAction
-    data class SetDailyExposure(val enabled : Boolean) : OnBoardingAction
-    data class SetSmoke(val enabled : Boolean) : OnBoardingAction
+    data class SetDailyExposure(val enabled: Boolean) : OnBoardingAction
+    data class SetSmoke(val enabled: Boolean) : OnBoardingAction
     data class SetAlcohol(val alcohol: Alcohol) : OnBoardingAction
+
+    data class Next(val screen: OnBoardingScreens) : OnBoardingAction
+    data class Back(val screen: OnBoardingScreens) : OnBoardingAction
 }

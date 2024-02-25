@@ -1,9 +1,9 @@
 package com.kyawlinnthant.codigo.statemanagementcodigo2.onboarding
 
-sealed interface OnBoardingScreens {
-    data object Start : OnBoardingScreens
-    data object Health : OnBoardingScreens
-    data object Diet : OnBoardingScreens
-    data object Allergy : OnBoardingScreens
-    data object Vitamin : OnBoardingScreens
+sealed class OnBoardingScreens(val index: Int) {
+    data object Start : OnBoardingScreens(0)
+    data object Health : OnBoardingScreens(1)
+    data object Diet : OnBoardingScreens(2)
+    data object Allergy : OnBoardingScreens(3)
+    data object Vitamin : OnBoardingScreens(4)
 }

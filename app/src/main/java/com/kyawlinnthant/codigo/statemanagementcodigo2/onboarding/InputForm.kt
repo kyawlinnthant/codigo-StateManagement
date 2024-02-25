@@ -7,7 +7,7 @@ import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Health
 data class InputForm(
     val healths: List<Health> = emptyList(),
     val diets: List<Diet> = emptyList(),
-    val allergies: List<Allergy> = emptyList()
+    val allergies: List<Allergy> = emptyList(),
 ) {
 
     fun healths() = healths

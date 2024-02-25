@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">State Management ( codigo 2 )</string>
+
+    <string name="get_started">Get started</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="get">Get my personalized vitamin</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <string name="start_header">Welcome to DailyVita</string>
     <string name="start_desc1">Hello we are here to make your life healthier and happier</string>
     <string name="start_desc2">We will ask couple of questions to better understanding of your vitamin need.</string>
+    <string name="health_title">Select the top health concerns. *</string>
+    <string name="health_hint">(Upto 5)</string>
+    <string name="health_prioritize">Prioritize</string>
+    <string name="diet_title">Selected the diet you follow. *</string>
+    <string name="allergy_title">Write specific allergies or sensitivity toward specific things. (optional)</string>
+    <string name="daily_exposure">Is your daily exposure to sun is limited? *</string>
+    <string name="smoke">Do you currently smoke (tobacco or marijuana)? *</string>
+    <string name="alcohol">On average, how many alcoholic beverages do you have in a week? *</string>
+    <string name="error">Fill the required forms</string>
 </resources>

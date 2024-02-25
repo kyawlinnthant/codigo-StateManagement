@@ -1,5 +1,6 @@
 package com.kyawlinnthant.codigo.statemanagementcodigo2.onboarding
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,8 +10,10 @@ import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Health
 import com.kyawlinnthant.codigo.statemanagementcodigo2.model.Vitamin
 import com.kyawlinnthant.codigo.statemanagementcodigo2.repo.JsonRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -21,6 +24,10 @@ import javax.inject.Inject
 class OnBoardingViewModel @Inject constructor(
     private val repo: JsonRepo
 ) : ViewModel() {
+
+    private val vmEvent = MutableSharedFlow<OnBoardingEvent>()
+    val uiEvent get() = vmEvent.asSharedFlow()
+
 
     private val vmHealths = mutableStateListOf<Health>()
     val selectedHealths get() = vmHealths
@@ -103,7 +110,72 @@ class OnBoardingViewModel @Inject constructor(
                         smoke = action.enabled
                     )
                 }
+
+                is OnBoardingAction.Back -> onBack(action.screen)
+                is OnBoardingAction.Next -> onNext(action.screen)
             }
+        }
+    }
+
+    private fun onBack(screens: OnBoardingScreens) {
+        viewModelScope.launch {
+            when (screens) {
+                OnBoardingScreens.Allergy -> vmEvent.emit(
+                    OnBoardingEvent.OnNavigate(
+                        OnBoardingScreens.Diet
+                    )
+                )
+
+                OnBoardingScreens.Diet -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Health))
+                OnBoardingScreens.Health -> vmEvent.emit(
+                    OnBoardingEvent.OnNavigate(
+                        OnBoardingScreens.Start
+                    )
+                )
+
+                OnBoardingScreens.Start -> Any()
+                OnBoardingScreens.Vitamin -> vmEvent.emit(
+                    OnBoardingEvent.OnNavigate(
+                        OnBoardingScreens.Allergy
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onNext(screens: OnBoardingScreens) {
+        viewModelScope.launch {
+            when (screens) {
+                OnBoardingScreens.Diet -> {
+                    if (selectedDiets.isEmpty()) {
+                        vmEvent.emit(OnBoardingEvent.ShowSnack)
+                    } else {
+                        vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Allergy))
+                    }
+                }
+
+                OnBoardingScreens.Health -> {
+                    if (selectedHealths.isEmpty()) {
+                        vmEvent.emit(OnBoardingEvent.ShowSnack)
+                    } else {
+                        vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Diet))
+                    }
+                }
+
+                OnBoardingScreens.Vitamin -> {
+                    summit()
+                }
+
+                OnBoardingScreens.Allergy -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Vitamin))
+                OnBoardingScreens.Start -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Health))
+            }
+        }
+    }
+
+    private fun summit() {
+        viewModelScope.launch {
+            val vitamin = mapToVitamin()
+            print(vitamin)
         }
     }
 
@@ -123,6 +195,8 @@ class OnBoardingViewModel @Inject constructor(
     private fun print(vitamin: Vitamin) {
         viewModelScope.launch {
             val result = repo.getResult(vitamin)
+
+            Log.e("summary", result.toString())
             print(result)
         }
     }
