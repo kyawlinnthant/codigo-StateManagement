@@ -41,7 +41,6 @@ fun OnBoardingScreen(
     enabledSmoke: Boolean,
     alcohol: Alcohol,
     onAction: (OnBoardingAction) -> Unit,
-    selectedHealths: List<Health>,
     inputHealths: List<Health>,
     selectedDiets: List<Diet>,
     inputDiets: List<Diet>,
@@ -105,7 +104,6 @@ fun OnBoardingScreen(
                 OnBoardingScreens.Health -> HealthScreen(
                     onAction = onAction,
                     inputHealths = inputHealths,
-                    selectedHealths = selectedHealths
                 )
 
                 OnBoardingScreens.Start -> StartScreen(

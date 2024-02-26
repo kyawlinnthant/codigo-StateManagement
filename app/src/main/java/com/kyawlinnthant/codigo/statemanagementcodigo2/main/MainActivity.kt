@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             val vm: OnBoardingViewModel = hiltViewModel()
-            val selectedHealths = vm.selectedHealths
             val selectedDiets = vm.selectedDiets
             val selectedAllergies = vm.selectedAllergies
             val dailyExposure = vm.dailyExposure.collectAsState()
@@ -86,7 +85,6 @@ class MainActivity : ComponentActivity() {
                             enabledExposure = dailyExposure.value,
                             enabledSmoke = smoke.value,
                             alcohol = alcohol.value,
-                            selectedHealths = selectedHealths,
                             inputHealths = supportedHealths.value,
                             selectedDiets = selectedDiets,
                             inputDiets = supportedDiets.value,

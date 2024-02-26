@@ -30,7 +30,6 @@ class OnBoardingViewModel @Inject constructor(
 
 
     private val vmHealths = mutableStateListOf<Health>()
-    val selectedHealths get() = vmHealths
     private val vmDiets = mutableStateListOf<Diet>()
     val selectedDiets get() = vmDiets
     private val vmAllergies = mutableStateListOf<Allergy>()
@@ -90,9 +89,7 @@ class OnBoardingViewModel @Inject constructor(
             when (action) {
                 is OnBoardingAction.AddAllergy -> vmAllergies.add(action.allergy)
                 is OnBoardingAction.AddDiet -> vmDiets.add(action.diet)
-                is OnBoardingAction.AddHealth -> vmHealths.add(action.health)
                 is OnBoardingAction.RemoveDiet -> vmDiets.remove(action.diet)
-                is OnBoardingAction.RemoveHealth -> vmHealths.remove(action.health)
                 is OnBoardingAction.SetAlcohol -> vmFinalForm.update {
                     it.copy(
                         alcohol = action.alcohol
@@ -113,6 +110,7 @@ class OnBoardingViewModel @Inject constructor(
 
                 is OnBoardingAction.Back -> onBack(action.screen)
                 is OnBoardingAction.Next -> onNext(action.screen)
+                is OnBoardingAction.AddHealths -> vmHealths.addAll(action.healths)
             }
         }
     }
@@ -126,7 +124,10 @@ class OnBoardingViewModel @Inject constructor(
                     )
                 )
 
-                OnBoardingScreens.Diet -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Health))
+                OnBoardingScreens.Diet -> {
+                    vmHealths.clear()
+                    vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Health))
+                }
                 OnBoardingScreens.Health -> vmEvent.emit(
                     OnBoardingEvent.OnNavigate(
                         OnBoardingScreens.Start
@@ -147,7 +148,7 @@ class OnBoardingViewModel @Inject constructor(
         viewModelScope.launch {
             when (screens) {
                 OnBoardingScreens.Diet -> {
-                    if (selectedDiets.isEmpty()) {
+                    if (vmDiets.isEmpty()) {
                         vmEvent.emit(OnBoardingEvent.ShowSnack)
                     } else {
                         vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Allergy))
@@ -155,7 +156,7 @@ class OnBoardingViewModel @Inject constructor(
                 }
 
                 OnBoardingScreens.Health -> {
-                    if (selectedHealths.isEmpty()) {
+                    if (vmHealths.isEmpty()) {
                         vmEvent.emit(OnBoardingEvent.ShowSnack)
                     } else {
                         vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Diet))
@@ -166,7 +167,12 @@ class OnBoardingViewModel @Inject constructor(
                     summit()
                 }
 
-                OnBoardingScreens.Allergy -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Vitamin))
+                OnBoardingScreens.Allergy -> vmEvent.emit(
+                    OnBoardingEvent.OnNavigate(
+                        OnBoardingScreens.Vitamin
+                    )
+                )
+
                 OnBoardingScreens.Start -> vmEvent.emit(OnBoardingEvent.OnNavigate(OnBoardingScreens.Health))
             }
         }

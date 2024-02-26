@@ -61,4 +61,5 @@ dependencies {
     implementation(libs.hilt.navigation)
     ksp(libs.google.hilt.compiler)
     implementation(libs.serialization.json)
+    implementation(libs.reorder.list)
 }
